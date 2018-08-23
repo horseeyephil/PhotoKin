@@ -30,19 +30,21 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     callbackURL: process.env.GOOGLE_CALLBACK
   }
 
-  const strategy = new GoogleStrategy(googleConfig, (token, refreshToken, profile, done) => {
-    const googleId = profile.id
-    const name = profile.displayName
-    const email = profile.emails[0].value
+  const strategy = new GoogleStrategy(
+    googleConfig,
+    (token, refreshToken, profile, done) => {
+      const googleId = profile.id
+      const name = profile.displayName
+      const email = profile.emails[0].value
 
-    User.find({where: {googleId}})
-      .then(foundUser => (foundUser
-        ? done(null, foundUser)
-        : User.create({name, email, googleId})
-          .then(createdUser => done(null, createdUser))
-      ))
-      .catch(done)
-  })
+      User.findOrCreate({
+        where: {googleId},
+        defaults: {name, email}
+      })
+        .then(([user]) => done(null, user))
+        .catch(done)
+    }
+  )
 
   passport.use(strategy)
 

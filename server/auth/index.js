@@ -20,7 +20,7 @@ router.post('/login', (req, res, next) => {
 
 router.post('/signup', (req, res, next) => {
 
-  if(req.body.accessCode !== 'horse'){
+  if(req.body.accessCode !== process.env.INVITE){
     res.sendStatus(404)
   }
   else{
