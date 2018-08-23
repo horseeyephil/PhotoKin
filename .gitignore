@@ -1,0 +1,15 @@
+node_modules
+public/bundle.js
+public/bundle.js.map
+public/photos/
+secrets.js
+awsconfig.json
+.DS_Store
+npm-debug.log
+yarn-error.log
+public/assets
+client/components/MTAFlyer.js
+client/components/philipFlyer.js
+client/components/pogsComponents
+client/components/spotlight.js
+client/components/imageUpload.js
