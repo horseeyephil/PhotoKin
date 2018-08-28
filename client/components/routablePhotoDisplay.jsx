@@ -8,7 +8,7 @@ const PhotoRoute = props => {
     const displayUser = props.allUsers.find(eachUser=> +eachUser.id === +props.id)
     console.log('Trying to look at', displayUser)
 
-    return <PhotoDisplay user={displayUser} />
+    return <PhotoDisplay displayUser={displayUser} />
 }
 
 const mapProps = state => ({allUsers: state.myUsers})

@@ -3,7 +3,6 @@ import React from 'react'
 import {Navbar} from './components'
 import Routes from './routes'
 import Chat from './components/chatAuth'
-import Photos from './components/photoUpload.jsx'
 import UserSelector from './components/userSelector.jsx'
 
 
@@ -15,7 +14,6 @@ const App = () => {
   return (
     <div>
         <Navbar/>
-        <Photos/>
         <Routes />
         <UserSelector />
     </div>

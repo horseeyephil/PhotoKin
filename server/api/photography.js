@@ -44,9 +44,9 @@ router.get('/library/:userPage', (req, res, next)=>{
 
         if(bucketContents.length>0){
 
-            const promisifiedMap = bucketContents.map(bucketContents=>{
+            const promisifiedMap = bucketContents.map(content=>{
 
-                const urlParams = {Bucket: process.env.BUCKETNAME, Key: bucketContents.Key};
+                const urlParams = {Bucket: process.env.BUCKETNAME, Key: content.Key, Expires: 3600};
 
                 return new Promise(function(resolve, reject){
                     s3Bucket.getSignedUrl('getObject',urlParams, function(err, url){
@@ -61,7 +61,10 @@ router.get('/library/:userPage', (req, res, next)=>{
 
             Promise.all(promisifiedMap).then(url=>{
                     console.log('result of promise: ', url)
-                    res.json(url)
+
+                    const zipped = url.map((eachUrl, index)=>({signedUrl: eachUrl, key: bucketContents[index].Key}))
+
+                    res.json(zipped)
                 })
                 .catch(next)
         }
@@ -90,6 +93,18 @@ router.post('/upload/:user', upload.single('image'), (req,res,next)=>{
         }
     });
     }
+})
+
+router.put('/', (req,res,next)=>{
+
+    console.log('We will tell S3 to delete ', req.body)
+
+    s3Bucket.deleteObject({Bucket: process.env.BUCKETNAME, Key: req.body.key}, (err, data) => {
+        if(err) next(err)
+        else{
+            res.sendStatus(204)
+        }
+    })
 })
 
 module.exports = router
