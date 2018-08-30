@@ -59,7 +59,7 @@ render(){
         <div>{this.props.displayUser.firstName}</div>
         {
             this.state[focus] && this.state[focus].map((eachPhoto, photoIndex)=>(
-            <div key={eachPhoto} className='frame'>
+            <div key={eachPhoto.key} className='frame'>
                 <img style={frame} src={eachPhoto.signedUrl} />
                 {this.props.user.firstName===this.props.displayUser.firstName && <div className='deleteButton'
                 onClick={(evt)=>{this.deletePhoto(eachPhoto.key, photoIndex)}}>[X]</div>}

@@ -1,21 +1,57 @@
-function canvasCompression(dataUrl){
+function canvasCompression(file){
 
-    const image = new Image()
-    image.src = dataUrl
+        const wrapper = document.createElement('div')
+        wrapper.style.position = 'absolute'
 
-    console.log('data maybe ', dataUrl)
+        const image = new Image()
+        image.src = URL.createObjectURL(file)
+        image.width = 500
+        image.style.position = 'relative'
+        
 
-    const nextHeight = 200
-    const nextWidth = 200
 
-    const canvas = document.createElement('canvas')
-    canvas.height= nextHeight
-    canvas.width= nextWidth
+        image.onload = function(){
+        document.getElementById('uploadTool').appendChild(wrapper)
+        wrapper.appendChild(image)
 
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(image, 0, 0, nextWidth, nextHeight);
+        const overlay = document.createElement('div')
+        overlay.style.width = '500px'
+        overlay.style.height = '700px'
+        overlay.style.backgroundColor = 'blue'
+        overlay.style.opacity = .5
+        overlay.style.zIndex = 100
+        overlay.style.position = 'absolute'
+        overlay.style.top = 0
 
-    document.getElementById('theCanvas').appendChild(image)
+        wrapper.appendChild(overlay)
+
+        performResize(image)
+
+
+
+        }
+
+}
+
+
+function performResize(image){
+
+
+        const nextHeight = 150
+        const nextWidth = 150
+
+        const canvas = document.createElement('canvas')
+        canvas.height= 200
+        canvas.width= 200
+
+        canvas.style.border='1px solid black'
+
+        const ctx = canvas.getContext("2d");
+        console.log('what is this? ', image.naturalWidth, image.naturalHeight)
+        ctx.drawImage(image, 1200, 1200, 1000, 1000, 20, 20, 200, 200);
+
+        document.getElementById('uploadTool').appendChild(canvas)
+
 
 
 }
