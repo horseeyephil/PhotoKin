@@ -39,7 +39,7 @@ class Photo extends React.Component {
     }
 
     handleCompression(){
-        const data = URL.createObjectURL(this.state.photoPreview)
+        const data = this.state.photoPreview
         console.log('Time to compress', data)
         canvasCompression(data)
     }
@@ -47,7 +47,7 @@ class Photo extends React.Component {
     render(){
 
         return (
-            <div>PHOTOS GO
+            <div id='uploadTool' >PHOTOS GO
 
             <img style={frame} src={'/photos/plannedWork.jpg'}/>
             <form onSubmit={this.handleUpload}>
