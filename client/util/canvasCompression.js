@@ -1,58 +1,56 @@
-function canvasCompression(file){
+function canvasCompression(file, quality){
 
-        const wrapper = document.createElement('div')
-        wrapper.style.position = 'absolute'
 
         const image = new Image()
         image.src = URL.createObjectURL(file)
-        image.width = 500
-        image.style.position = 'relative'
-        
+                
+        return new Promise((resolve, reject)=>{
+
+            image.onload = function(){
+
+            //REFACTOR LATER TO BE CONCURRENT
+
+                performResize(image, quality).toBlob(fullBlob=>{
+
+                    generateThumbnail(image).toBlob(thumbnailBlob=>{
+                        resolve([thumbnailBlob, fullBlob])
+                    }, 'image/jpeg', .7)
+
+                }, 'image/jpeg', quality)
+            }
+        })
+}
 
 
-        image.onload = function(){
-        document.getElementById('uploadTool').appendChild(wrapper)
-        wrapper.appendChild(image)
+function generateThumbnail(image){
 
-        const overlay = document.createElement('div')
-        overlay.style.width = '500px'
-        overlay.style.height = '700px'
-        overlay.style.backgroundColor = 'blue'
-        overlay.style.opacity = .5
-        overlay.style.zIndex = 100
-        overlay.style.position = 'absolute'
-        overlay.style.top = 0
+    const canvas = document.createElement('canvas')
+    canvas.height= 150
+    canvas.width= 150
+    canvas.style.border='1px solid black'
 
-        wrapper.appendChild(overlay)
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(image, image.naturalWidth*.2, image.naturalHeight*.2, image.naturalWidth*.6, image.naturalHeight*.6, 0, 0, 150, 150);
 
-        performResize(image)
-
-
-
-        }
+    document.getElementById('uploadTool').appendChild(canvas)
+    return canvas
 
 }
 
 
-function performResize(image){
+function performResize(image, quality){
 
-
-        const nextHeight = 150
-        const nextWidth = 150
-
+  
         const canvas = document.createElement('canvas')
-        canvas.height= 200
-        canvas.width= 200
-
-        canvas.style.border='1px solid black'
+        canvas.height= image.naturalHeight*quality
+        canvas.width= image.naturalWidth*quality
+        canvas.style.border='1px solid red'
 
         const ctx = canvas.getContext("2d");
-        console.log('what is this? ', image.naturalWidth, image.naturalHeight)
-        ctx.drawImage(image, 1200, 1200, 1000, 1000, 20, 20, 200, 200);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
         document.getElementById('uploadTool').appendChild(canvas)
-
-
+        return canvas
 
 }
 

@@ -3,23 +3,35 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 import PhotoUpload from './photoUpload.jsx'
 
-const frame = {width: 200, height: 150, display: 'block'}
+//const frame = {width: 150, height: 150, display: 'block'}
+const frame = {display: 'block', width: 1000, height: 'auto'}
 
 class Display extends React.Component{
 
 constructor(props){
     super(props)
     this.state={
-        photography: []
+        photography: [],
+        selectedDisplay: ''
     }
     this.loadLibrary = this.loadLibrary.bind(this)
     this.deletePhoto = this.deletePhoto.bind(this)
+    this.displaySelected = this.displaySelected.bind(this)
 }
 
 loadLibrary(user){
 
     axios.get(`/api/photography/library/${user.firstName+user.lastName+user.id}`).then(res=>res.data).then(paths=>{
         this.setState({[user.firstName+user.lastName+user.id]: paths})
+    })
+}
+
+displaySelected(photo){
+
+    axios(`/api/photography/library/${photo}`)
+    .then(url=>url.data)
+    .then(url=>{
+        this.setState({selectedDisplay: url})
     })
 }
 
@@ -44,7 +56,6 @@ componentDidUpdate(prevProps, prevState){
     const focus = this.props.displayUser.firstName+this.props.displayUser.lastName+this.props.displayUser.id
     
     if(!this.state[focus]){
-        console.log('The state? ', this.state)
         this.loadLibrary(this.props.displayUser)
     }
 }
@@ -57,10 +68,11 @@ render(){
     <React.Fragment>
         {this.props.displayUser.firstName === this.props.user.firstName && <PhotoUpload/>}
         <div>{this.props.displayUser.firstName}</div>
+        {this.state.selectedDisplay && <img src={this.state.selectedDisplay} style={{border: '1px solid green'}}/>}
         {
             this.state[focus] && this.state[focus].map((eachPhoto, photoIndex)=>(
             <div key={eachPhoto.key} className='frame'>
-                <img style={frame} src={eachPhoto.signedUrl} />
+                <img style={frame} src={eachPhoto.signedUrl} onClick={()=>{this.displaySelected(eachPhoto.key)}}/>
                 {this.props.user.firstName===this.props.displayUser.firstName && <div className='deleteButton'
                 onClick={(evt)=>{this.deletePhoto(eachPhoto.key, photoIndex)}}>[X]</div>}
             </div>

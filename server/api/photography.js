@@ -46,7 +46,7 @@ router.get('/library/:userPage', (req, res, next)=>{
 
             const promisifiedMap = bucketContents.map(content=>{
 
-                const urlParams = {Bucket: process.env.BUCKETNAME, Key: content.Key, Expires: 3600};
+                const urlParams = {Bucket: process.env.BUCKETNAME, Key: 'thumbnail/' + content.Key, Expires: 3600};
 
                 return new Promise(function(resolve, reject){
                     s3Bucket.getSignedUrl('getObject',urlParams, function(err, url){
@@ -60,8 +60,7 @@ router.get('/library/:userPage', (req, res, next)=>{
             })
 
             Promise.all(promisifiedMap).then(url=>{
-                    console.log('result of promise: ', url)
-
+                    
                     const zipped = url.map((eachUrl, index)=>({signedUrl: eachUrl, key: bucketContents[index].Key}))
 
                     res.json(zipped)
@@ -71,16 +70,32 @@ router.get('/library/:userPage', (req, res, next)=>{
      })
 })
 
+router.get('/library/:userPage/:objectKey', (req,res,next)=>{
 
-router.post('/upload/:user', upload.single('image'), (req,res,next)=>{
+    console.log('Libraries, ', req.params)
 
-    
+    s3Bucket.getSignedUrl('getObject', {Bucket: process.env.BUCKETNAME, Key: req.params.userPage + '/' + req.params.objectKey}, function(err, url){
+        if(err) next(err)
+        else{
+            res.json(url)
+        }
+    })
+})
+
+
+router.post('/upload/:user', upload.array('image'), (req,res,next)=>{
+
     const {firstName, lastName, id, numberOfImages} = req.user
 
     if(id!==1 && numberOfImages>=20) next(new Error('You have reached your limit of photos'))
+
+    //REFACTOR TO A PROMISE.MAP
+
     else {
-    const data = { Key: firstName+lastName+id + '/' + req.file.originalname, Body: req.file.buffer };
-    s3Bucket.putObject(data, function (err, data) {
+    const thumbData = { Key: 'thumbnail/' + firstName+lastName+id + '/' + req.files[0].originalname, Body: req.files[0].buffer };
+    const photoData = { Key: firstName+lastName+id + '/' + req.files[1].originalname, Body: req.files[1].buffer }
+    
+    s3Bucket.putObject(photoData, function (err, data) {
         if (err) {
             console.log('Error uploading data: ', data);
             res.sendStatus(503)
@@ -92,6 +107,16 @@ router.post('/upload/:user', upload.single('image'), (req,res,next)=>{
             })
         }
     });
+
+    s3Bucket.putObject(thumbData, function (err, data) {
+        if (err) {
+            console.log('Error uploading data: ', data);
+            res.sendStatus(503)
+        } else {
+            console.log('succesfully uploaded the thumbnail!')
+        }
+    });
+
     }
 })
 
