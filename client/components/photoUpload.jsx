@@ -1,11 +1,10 @@
 import React from 'react'
 import axios from 'axios'
 import {connect} from 'react-redux'
-import PhotoDisplay from './photoDisplay.jsx'
 import CompressionForm from './photoCompressionForm.jsx'
 import canvasCompression from '../util/canvasCompression'
 
-const frame = {width: 800, height: 'auto', display: 'block'}
+const frame = {width: 600, height: 'auto', display: 'block'}
 
 
 class Photo extends React.Component {
@@ -16,16 +15,20 @@ class Photo extends React.Component {
 
         this.state={
             photoPreview: null,
+            photoName: '',
             library: false,
-            canvasAppear: false
+            uploadQuality: 0,
         }
+
         this.handleAFile=this.handleAFile.bind(this)
         this.handleUpload=this.handleUpload.bind(this)
         this.handleCompression=this.handleCompression.bind(this)
+        this.setUploadQuality=this.setUploadQuality.bind(this)
     }
 
     handleAFile(event){
-        this.setState({photoPreview: event.target.files[0]})
+
+        this.setState({photoPreview: event.target.files[0], photoName: event.target.files[0].name})
     }
 
     handleUpload(event){
@@ -38,33 +41,47 @@ class Photo extends React.Component {
         axios.post(`/api/photography/upload/${user.firstName+user.lastName+user.id}`, attachment).then(console.log)
     }
 
-    handleCompression(){
-        const data = this.state.photoPreview
-        console.log('Time to compress', data)
-        canvasCompression(data)
+    setUploadQuality(uploadQuality){
+        this.setState({uploadQuality})
     }
-    
+
+    handleCompression(event){
+
+        event.preventDefault()
+
+        const image = this.state.photoPreview
+        canvasCompression(image, this.state.uploadQuality).then(([thumb, fullSize])=>{
+
+            const {user} = this.props
+            const attachment = new FormData()
+            attachment.append('image', thumb, Date.now() + this.state.photoName)
+            attachment.append('image', fullSize, Date.now() + this.state.photoName)
+
+            axios.post(`/api/photography/upload/${user.firstName+user.lastName+user.id}`, attachment)
+            .then(res=>res.data)
+            .then(res=>{
+
+                console.log(res)
+                this.setState({photoPreview: null})
+            })
+        })
+    }
+
     render(){
 
         return (
             <div id='uploadTool' >PHOTOS GO
 
             <img style={frame} src={'/photos/plannedWork.jpg'}/>
-            <form onSubmit={this.handleUpload}>
+            <form onSubmit={this.handleCompression}>
                 <span>Looking to upload a photo</span>
                 <input onChange = {this.handleAFile} name="myFile" type="file" />
-                <button>Sub</button>
+                {this.state.uploadQuality>0 && <button>Sub</button>}
             </form>
-            {this.props.user && (
-                <button onClick = {()=>this.setState({library: !this.state.library})}
-                >LOAD MY LIBRARY</button>)
-            }
             {this.state.photoPreview && <div>
                 <img style={frame} src={URL.createObjectURL(this.state.photoPreview)} />
-                <CompressionForm handleCompression={this.handleCompression}/>
+                <CompressionForm setUploadQuality = {this.setUploadQuality} handleCompression={this.handleCompression}/>
             </div>}
-            {this.state.library && <PhotoDisplay displayUser={this.props.user}/>}
-            {this.state.photoPreview && <canvas id='theCanvas' style={{border: '1px solid black'}}/>}
             </div>
 
         )
