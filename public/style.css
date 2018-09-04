@@ -212,3 +212,38 @@ form div {
   background: whitesmoke;
   overflow: hidden
 }
+
+.tileStrip{
+  border: 1px solid red;
+  display: inline-flex;
+  width: 200px; 
+  flex-wrap: wrap;
+  vertical-align: top;
+}
+
+
+.tile{
+  /* width: 100px;
+  height: 100px; */
+  position: relative; flex: 1 1 50%; display: flex;
+}
+
+.tile:hover{
+  background-color: #940c50;
+  opacity: .2;
+  z-index: 300;
+}
+
+.thumbImage{
+  width: 100%;
+  height: 100%;
+}
+
+.photoDisplay{
+  
+}
+
+.selectedDisplay{
+  
+}
+
