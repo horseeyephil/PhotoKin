@@ -3,6 +3,7 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 import CompressionForm from './photoCompressionForm.jsx'
 import canvasCompression from '../util/canvasCompression'
+import uploadToolStyle from './componentStyles/uploader.css'
 
 const frame = {width: 600, height: 'auto', display: 'block'}
 
@@ -70,9 +71,9 @@ class Photo extends React.Component {
     render(){
 
         return (
-            <div id='uploadTool' >PHOTOS GO
+            <div id='uploadTool' className={uploadToolStyle.uploadTool}>
 
-            <img style={frame} src={'/photos/plannedWork.jpg'}/>
+            {/* <img style={frame} src={'/photos/plannedWork.jpg'}/> */}
             <form onSubmit={this.handleCompression}>
                 <span>Looking to upload a photo</span>
                 <input onChange = {this.handleAFile} name="myFile" type="file" />

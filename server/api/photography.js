@@ -120,6 +120,9 @@ router.post('/upload/:user', upload.array('image'), (req,res,next)=>{
     }
 })
 
+//You must refactor delete to handle dual-deletion of thumbnail and original
+//You must also have delete be authenticated
+
 router.put('/', (req,res,next)=>{
 
     console.log('We will tell S3 to delete ', req.body)
