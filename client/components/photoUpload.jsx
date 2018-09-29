@@ -3,7 +3,7 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 import CompressionForm from './photoCompressionForm.jsx'
 import canvasCompression from '../util/canvasCompression'
-import uploadToolStyle from './componentStyles/uploader.css'
+import styles from './componentStyles/uploader.css'
 
 const frame = {width: 600, height: 'auto', display: 'block'}
 
@@ -19,6 +19,7 @@ class Photo extends React.Component {
             photoName: '',
             library: false,
             uploadQuality: 0,
+            openTool: true
         }
 
         this.handleAFile=this.handleAFile.bind(this)
@@ -71,18 +72,19 @@ class Photo extends React.Component {
     render(){
 
         return (
-            <div id='uploadTool' className={uploadToolStyle.uploadTool}>
-
-            {/* <img style={frame} src={'/photos/plannedWork.jpg'}/> */}
-            <form onSubmit={this.handleCompression}>
-                <span>Looking to upload a photo</span>
-                <input onChange = {this.handleAFile} name="myFile" type="file" />
-                {this.state.uploadQuality>0 && <button>Sub</button>}
-            </form>
-            {this.state.photoPreview && <div>
-                <img style={frame} src={URL.createObjectURL(this.state.photoPreview)} />
-                <CompressionForm setUploadQuality = {this.setUploadQuality} handleCompression={this.handleCompression}/>
-            </div>}
+            <div className = {styles.uploadTool}>
+            <div className={styles.switchButton}
+            onClick = {()=>{this.setState({openTool: !this.state.openTool})}}>U</div>
+                {true && <div className={this.state.openTool ? styles.uploadFormClosed : styles.uploadFormOpen}>
+                <form onSubmit={this.handleCompression}>
+                    <input onChange = {this.handleAFile} name="myFile" type="file" />
+                    {this.state.uploadQuality>0 && <button>Sub</button>}
+                </form>
+                {this.state.photoPreview && <div>
+                    <img style={frame} src={URL.createObjectURL(this.state.photoPreview)} />
+                    <CompressionForm setUploadQuality = {this.setUploadQuality} handleCompression={this.handleCompression}/>
+                </div>}
+                </div>}
             </div>
 
         )

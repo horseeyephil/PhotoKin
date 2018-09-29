@@ -1,6 +1,5 @@
 const isDev = process.env.NODE_ENV === 'development'
-const combineLoaders = require('webpack-combine-loaders')
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
@@ -8,6 +7,18 @@ module.exports = {
     '@babel/polyfill', // enables async-await
     './client/index.js'
   ],
+  // optimization: !isDev ? {
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       styles: {
+  //         name: 'style',
+  //         test: /\.css$/,
+  //         chunks: 'all',
+  //         enforce: true
+  //       }
+  //     }
+  //   }
+  // } : undefined,
   output: {
     path: __dirname,
     filename: './public/bundle.js'
@@ -15,7 +26,13 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  // plugins: [new ExtractTextPlugin('style.css')],
+  plugins: [    
+    new MiniCssExtractPlugin({
+      filename: "./public/[name].css",
+      chunkFilename: "./public/[id].css"
+    
+    })
+  ],
   devtool: 'source-map',
   module: {
     rules: [
@@ -26,18 +43,16 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: combineLoaders([
-          {
-            loader: 'style-loader'
-          }, {
-            loader: 'css-loader',
+        use: [
+          MiniCssExtractPlugin.loader,
+          {loader: 'css-loader',
             query: {
               modules: true,
               localIdentName: '[name]__[local]___[hash:base64:5]'
             }
           }
-        ])
-      }
+      ]
+    }
     ]
   }
 }
