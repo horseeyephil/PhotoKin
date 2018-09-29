@@ -1,0 +1,150 @@
+.nav__nav___2SbB7{
+    
+    height: 80px;
+    background-color: aliceblue;
+}
+
+.nav__switchButton___3WoLq {
+    border: 2px solid black;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    background-color: aliceblue;
+}
+
+.nav__navTool___2mcSI {
+    
+    width: 300px;
+    height: 40px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+}
+
+.nav__navOpen___3v09u {
+    position: absolute;
+    right: 0;
+    border: 2px solid orange;
+    width: 300px;
+    height: 40px;
+    border-radius: 40px;
+    transition: width 1s;
+}
+
+.nav__navClosed___Gfseh {
+    position: absolute;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    border: 2px solid orange;
+    transition: width 1s;
+    overflow: hidden;
+}
+.uploader__switchButton___1bBNc {
+    border: 2px solid orange;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    background-color: aliceblue;
+}
+
+.uploader__uploadTool___2h9Jd {
+    
+    width: 300px;
+    height: 40px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+}
+
+.uploader__uploadFormOpen___2zgbs {
+    position: absolute;
+    right: 0;
+    border: 2px solid orange;
+    width: 300px;
+    height: 40px;
+    border-radius: 40px;
+    transition: width 1s;
+}
+
+.uploader__uploadFormClosed___rcpCc {
+    position: absolute;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    border: 2px solid orange;
+    transition: width 1s;
+    overflow: hidden;
+}
+.photoDisplay__display___2IfRO{
+    display: flex;
+    position: relative;
+    width: 99.2%;
+    border: 2px solid rgb(47, 130, 255);
+    align-items: flex-start;
+    background-color: rgb(222, 222, 222);
+}
+
+ .photoDisplay__selectedDisplay___EpAV4{
+    display: inline-flex;
+    flex: 20;
+    min-height: 750px;
+    justify-content: center;
+  }
+
+  .photoDisplay__selectedImage___2kbJ7{
+      height: 640px;
+      width: auto;
+      margin-top: 8vh;
+      box-shadow: 20px 20px pink
+  }
+
+.photoDisplay__tileStrip___2vlqk{
+    border: 1px solid red;
+    display: inline-flex;
+    width: 180px; 
+    flex-wrap: wrap;
+    vertical-align: top;
+  }
+  
+  .photoDisplay__tile___1jGCs{ 
+    position: relative;
+    flex: 0 1 50%; 
+    height: 90px;
+    width: 90px;
+  }
+  
+  
+  .photoDisplay__overLay___6663T{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: .4;
+      z-index: 300;
+      background-color: #219bb9;
+  }
+
+  .photoDisplay__overLay___6663T:hover{
+    opacity: .2;
+  }
+  
+  .photoDisplay__thumbImage___1_XwI{
+    width: 100%;
+    height: 100%;
+  }
+  
+ 
+  
+ 
+  
+  
+
+/*# sourceMappingURL=main.css.map*/

@@ -1,12 +1,9 @@
 import React from 'react'
 import axios from 'axios'
 import {connect} from 'react-redux'
-import PhotoUpload from './photoUpload.jsx'
+import UploadTool from './photoUpload.jsx'
+import styles from './componentStyles/photoDisplay.css'
 
-
-const thumbnail = { width: 150, height: 150, position: 'relative', flex: '0 1 50%', display: 'flex'}
-const selected = { width: '75vw', height: 'auto', padding: 50, border: '1px solid blue', }
-const tileStrip = {display: 'flex', width: 300, flexWrap: 'wrap'}
 const deleteButton = {position: 'absolute', right: 20, top: 20, zIndex: 100}
 
 class Display extends React.Component{
@@ -33,7 +30,6 @@ displaySelected(photo){
 
     if(this.state[photo]) this.setState({selectedDisplay: this.state[photo]})
     else {
-        console.log('we need a new signed url')
         axios(`/api/photography/library/${photo}`)
         .then(url=>url.data)
         .then(url=>{
@@ -72,25 +68,26 @@ render(){
     const focus = this.props.displayUser.firstName+this.props.displayUser.lastName+this.props.displayUser.id
     
     return (
-    <React.Fragment>
-        {this.props.displayUser.firstName === this.props.user.firstName && <PhotoUpload/>}
-        <div>{this.props.displayUser.firstName}</div>
-        <div className='photoDisplay'>
-            <div className='tileStrip'>
+        <div className={styles.display}>
+        {this.props.displayUser.firstName === this.props.user.firstName && <UploadTool/>}
+            <div className={styles.tileStrip}>
             {
                 this.state[focus] && this.state[focus].map((eachPhoto, photoIndex)=>(
-                <div key={eachPhoto.key} className='tile'>
-                    <img className= 'thumbImage' src={eachPhoto.signedUrl} onClick={()=>{this.displaySelected(eachPhoto.key)}}/>
+                <div key={eachPhoto.key} className={styles.tile} 
+                onClick={()=>{this.displaySelected(eachPhoto.key)}}>
+                    <div className={styles.overLay}/>
+                    <img className= {styles.thumbImage} src={eachPhoto.signedUrl} />
                     {this.props.user.firstName===this.props.displayUser.firstName && <div className='deleteButton' style={deleteButton}
                     onClick={(evt)=>{this.deletePhoto(eachPhoto.key, photoIndex)}}>[X]</div>}
                 </div>
                 ))
             }
             </div>
-            {this.state.selectedDisplay && 
-            <img src={this.state.selectedDisplay} style={selected} className='selectedDisplay' />}
+            
+            <div className={styles.selectedDisplay}>
+            {this.state.selectedDisplay && <img src={this.state.selectedDisplay} className={styles.selectedImage} />}
+            </div >
         </div>
-    </React.Fragment>
 )}
 }
 
