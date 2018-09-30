@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import UploadTool from './photoUpload.jsx'
 import styles from './componentStyles/photoDisplay.css'
 
-const deleteButton = {position: 'absolute', right: 20, top: 20, zIndex: 100}
+const deleteButton = {position: 'absolute', right: 20, top: 20, zIndex: 500}
 
 class Display extends React.Component{
 

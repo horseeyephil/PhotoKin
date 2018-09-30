@@ -72,7 +72,7 @@ class Photo extends React.Component {
     render(){
 
         return (
-            <div className = {styles.uploadTool}>
+            <div id='uploadTool' className = {styles.uploadTool}>
             <div className={styles.switchButton}
             onClick = {()=>{this.setState({openTool: !this.state.openTool})}}>U</div>
                 {true && <div className={this.state.openTool ? styles.uploadFormClosed : styles.uploadFormOpen}>
