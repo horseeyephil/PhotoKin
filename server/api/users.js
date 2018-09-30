@@ -5,7 +5,6 @@ module.exports = router
 
 const verifyUser = (req,res,next)=>{
   if(req.isAuthenticated()) {
-    console.log('YOUR IN')
     return next()
   }
   const error = new Error('forbiddden!')

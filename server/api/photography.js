@@ -24,13 +24,10 @@ const s3Bucket = new AWS.S3( { params: bucketParams } )
 // router.get('/library', (req, res, next)=>{
     
 //     fs.readdir(path.join(__dirname,'../..','/public/photos'), (err,files)=>{
-//         console.log('THESE ARE THE FILES ',files )
 //         res.json(files)
 //     })
 // })
 // ------ FORMERLY USING MULTER AND FILE SYSTEM TO STORE PHOTOS ------
-
-
 
 router.get('/library/:userPage', (req, res, next)=>{
 
@@ -39,8 +36,6 @@ router.get('/library/:userPage', (req, res, next)=>{
         if(err) res.json(503)
 
         const bucketContents = data.Contents;
-
-        console.log('We get this from the list operation ', data)
 
         if(bucketContents.length>0){
 
@@ -62,7 +57,6 @@ router.get('/library/:userPage', (req, res, next)=>{
             Promise.all(promisifiedMap).then(url=>{
                     
                     const zipped = url.map((eachUrl, index)=>({signedUrl: eachUrl, key: bucketContents[index].Key}))
-
                     res.json(zipped)
                 })
                 .catch(next)
@@ -71,8 +65,6 @@ router.get('/library/:userPage', (req, res, next)=>{
 })
 
 router.get('/library/:userPage/:objectKey', (req,res,next)=>{
-
-    console.log('Libraries, ', req.params)
 
     s3Bucket.getSignedUrl('getObject', {Bucket: process.env.BUCKETNAME, Key: req.params.userPage + '/' + req.params.objectKey}, function(err, url){
         if(err) next(err)
@@ -87,52 +79,65 @@ router.post('/upload/:user', upload.array('image'), (req,res,next)=>{
 
     const {firstName, lastName, id, numberOfImages} = req.user
 
-    if(id!==1 && numberOfImages>=20) next(new Error('You have reached your limit of photos'))
-
-    //REFACTOR TO A PROMISE.MAP
+    if(numberOfImages>=20) next(new Error('You have reached your limit of photos'))
 
     else {
     const thumbData = { Key: 'thumbnail/' + firstName+lastName+id + '/' + req.files[0].originalname, Body: req.files[0].buffer };
     const photoData = { Key: firstName+lastName+id + '/' + req.files[1].originalname, Body: req.files[1].buffer }
     
-    s3Bucket.putObject(photoData, function (err, data) {
-        if (err) {
-            console.log('Error uploading data: ', data);
-            res.sendStatus(503)
-        } else {
-            console.log('succesfully uploaded the image!')
-            User.findById(req.user.id).then(user=>{
-                user.numberOfImages++
-                user.save().then(_=> res.json(data))
-            })
-        }
-    });
+    const wholeImage = new Promise((resolve, reject)=>{
+        s3Bucket.putObject(photoData, function (err, data) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(data)
+            }
+        })
+    })
 
-    s3Bucket.putObject(thumbData, function (err, data) {
-        if (err) {
-            console.log('Error uploading data: ', data);
-            res.sendStatus(503)
-        } else {
-            console.log('succesfully uploaded the thumbnail!')
-        }
-    });
+    const thumbNail = new Promise((resolve, reject)=>{
+        s3Bucket.putObject(thumbData, function (err, data) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(data)
+            }
+        })
+    })
 
+    Promise.all([wholeImage, thumbNail]).then(bundle=>{
+        req.user.numberOfImages++
+        req.user.save().then(_=>res.json(bundle))
+    })
     }
 })
 
-//You must refactor delete to handle dual-deletion of thumbnail and original
-//You must also have delete be authenticated
+//To-do: Refine this authentication
 
 router.put('/', (req,res,next)=>{
 
     console.log('We will tell S3 to delete ', req.body)
 
-    s3Bucket.deleteObject({Bucket: process.env.BUCKETNAME, Key: req.body.key}, (err, data) => {
-        if(err) next(err)
-        else{
-            res.sendStatus(204)
-        }
-    })
+    const authenticated = req.user.firstName+req.user.lastName+req.user.id
+
+    if(!req.body.key.startsWith(authenticated)){
+        const error = new Error('You do not have permission to delete this photo.')
+        error.status=403
+        next(error)
+    }
+    else{
+
+        s3Bucket.deleteObject({Bucket: process.env.BUCKETNAME, Key: req.body.key}, (err, data) => {
+            if(err) next(err)
+            else{
+                req.user.numberOfImages--
+                req.user.save().then(_=>{
+                    res.sendStatus(204)
+                })
+                .catch(next)
+            }
+        })
+    }
 })
 
 module.exports = router

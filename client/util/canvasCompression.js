@@ -6,19 +6,25 @@ function canvasCompression(file, quality){
                 
         return new Promise((resolve, reject)=>{
 
-            image.onload = function(){
+            image.onload = async function(){
 
             //REFACTOR LATER TO BE CONCURRENT
 
-                performResize(image, quality).toBlob(fullBlob=>{
-
+                const resized = new Promise((res, rej)=>{
+                    performResize(image, quality).toBlob(fullBlob=>{
+                        res(fullBlob)
+                    }, 'image/jpeg', quality)
+                })
+                const thumb = new Promise((res, rej)=>{
                     generateThumbnail(image).toBlob(thumbnailBlob=>{
-                        resolve([thumbnailBlob, fullBlob])
+                        res(thumbnailBlob)
                     }, 'image/jpeg', .7)
-
-                }, 'image/jpeg', quality)
-            }
-        })
+                })
+                
+                const bundle = await Promise.all([thumb, resized])
+                resolve(bundle)
+                }
+            })
 }
 
 
