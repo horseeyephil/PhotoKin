@@ -1,18 +1,17 @@
 .nav__nav___2SbB7{
-    
     height: 80px;
     background-color: aliceblue;
 }
 
 .nav__switchButton___3WoLq {
     border: 2px solid black;
-    width: 40px;
+    /* width: 40px;
     height: 40px;
-    border-radius: 40px;
+    border-radius: 40px; */
     position: absolute;
     right: 0;
     z-index: 2;
-    background-color: aliceblue;
+    background-color: rgb(161, 223, 161);
 }
 
 .nav__navTool___2mcSI {
@@ -37,12 +36,33 @@
 .nav__navClosed___Gfseh {
     position: absolute;
     right: 0;
-    width: 40px;
+    /* width: 40px;
     height: 40px;
-    border-radius: 40px;
-    border: 2px solid orange;
+    border-radius: 40px; */
     transition: width 1s;
+    border: 2px solid orange;
     overflow: hidden;
+}
+
+.nav__nameHeader___2mASt {
+    font-size: 40px;
+    font-family: Helvetica, sans-serif;
+    border: none;
+    width: 500px;
+    height: 100%;
+    background-color: grey;
+    /* border-bottom: 3px solid black; */
+    line-height: -20px;
+    padding: 0px 0px;
+}
+
+.nav__nameHeader___2mASt:focus{
+  outline: none;
+}
+
+.nav__users___EH1Hh{
+  display: inline;
+
 }
 .uploader__switchButton___1bBNc {
     border: 2px solid orange;
