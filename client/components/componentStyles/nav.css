@@ -1,18 +1,17 @@
 .nav{
-    
     height: 80px;
     background-color: aliceblue;
 }
 
 .switchButton {
     border: 2px solid black;
-    width: 40px;
+    /* width: 40px;
     height: 40px;
-    border-radius: 40px;
+    border-radius: 40px; */
     position: absolute;
     right: 0;
     z-index: 2;
-    background-color: aliceblue;
+    background-color: rgb(161, 223, 161);
 }
 
 .navTool {
@@ -37,10 +36,31 @@
 .navClosed {
     position: absolute;
     right: 0;
-    width: 40px;
+    /* width: 40px;
     height: 40px;
-    border-radius: 40px;
-    border: 2px solid orange;
+    border-radius: 40px; */
     transition: width 1s;
+    border: 2px solid orange;
     overflow: hidden;
+}
+
+.nameHeader {
+    font-size: 40px;
+    font-family: Helvetica, sans-serif;
+    border: none;
+    width: 500px;
+    height: 100%;
+    background-color: grey;
+    /* border-bottom: 3px solid black; */
+    line-height: -20px;
+    padding: 0px 0px;
+}
+
+.nameHeader:focus{
+  outline: none;
+}
+
+.users{
+  display: inline;
+
 }
