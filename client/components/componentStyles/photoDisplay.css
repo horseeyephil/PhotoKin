@@ -1,10 +1,13 @@
 .display{
     display: flex;
-    position: relative;
-    width: 99.2%;
-    border: 2px solid rgb(47, 130, 255);
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    width: 100vw;
+    height: 99vh;
+    /* border: 2px solid rgb(47, 130, 255); */
     align-items: flex-start;
-    background-color: rgb(222, 222, 222);
+    background-color: white;
 }
 
  .selectedDisplay{
@@ -15,16 +18,25 @@
   }
 
   .selectedImage{
-      height: 640px;
+      height: 96vh;
       width: auto;
-      margin-top: 8vh;
-      box-shadow: 20px 20px pink
+      padding: 10vh;
+      border: 1px solid black;
+  }
+
+  .uploadPreview{
+      height: 75vh;
+      width: auto;
+      padding: 10vh;
+      border: 1px dotted black;
   }
 
 .tileStrip{
     border: 1px solid red;
     display: inline-flex;
-    width: 180px; 
+    width: 140px; 
+    max-height: 100%;
+    overflow-y: scroll;
     flex-wrap: wrap;
     vertical-align: top;
   }
@@ -32,10 +44,9 @@
   .tile{ 
     position: relative;
     flex: 0 1 50%; 
-    height: 90px;
-    width: 90px;
+    height: 70px;
+    width: 70px;
   }
-  
   
   .overLay{
       position: absolute;
@@ -55,8 +66,20 @@
     height: 100%;
   }
   
- 
-  
- 
-  
-  
+  .deleteButton{
+    position: relative;
+    top: 40px;
+    padding: 5px;
+    height: 20px;
+    border-radius: 20px;
+    border: 1px solid red;
+    color: red;
+    cursor: pointer;
+  }
+
+.deleteButton:hover{
+  background-color: pink;
+  opacity: .7;
+  transition: background-color 1s;
+}
+

@@ -12,7 +12,8 @@ import Title from './userHeading'
 const Navbar = ({ handleClick, isLoggedIn, name }) => (
   <div className = {styles.nav}>
     <Title userName={name}/>
-    <Drawer scale={40}>
+    <Drawer className={styles.panel} switch={styles.switchButton} closedClass={styles.panelClosed} openClass={styles.panelOpen}
+    scale={40} root={styles.navTool} openWidth='300px' openHeight='500px'>
       {isLoggedIn ? (
         <div>
           <Link to="/home">Home</Link>
