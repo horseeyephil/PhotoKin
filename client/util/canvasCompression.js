@@ -1,14 +1,11 @@
 function canvasCompression(file, quality){
 
-
         const image = new Image()
         image.src = URL.createObjectURL(file)
                 
         return new Promise((resolve, reject)=>{
 
             image.onload = async function(){
-
-            //REFACTOR LATER TO BE CONCURRENT
 
                 const resized = new Promise((res, rej)=>{
                     performResize(image, quality).toBlob(fullBlob=>{
@@ -20,11 +17,14 @@ function canvasCompression(file, quality){
                         res(thumbnailBlob)
                     }, 'image/jpeg', .7)
                 })
-                
-                const bundle = await Promise.all([thumb, resized])
-                resolve(bundle)
+                try{
+                  const bundle = await Promise.all([thumb, resized])
+                  resolve(bundle)
+                } catch(err){
+                  reject(err)
                 }
-            })
+            }
+        })
 }
 
 
@@ -40,13 +40,11 @@ function generateThumbnail(image){
 
     document.getElementById('uploadTool').appendChild(canvas)
     return canvas
-
 }
 
 
 function performResize(image, quality){
 
-  
         const canvas = document.createElement('canvas')
         canvas.height= image.naturalHeight*quality
         canvas.width= image.naturalWidth*quality
@@ -55,9 +53,7 @@ function performResize(image, quality){
         const ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-        document.getElementById('uploadTool').appendChild(canvas)
         return canvas
-
 }
 
 export default canvasCompression

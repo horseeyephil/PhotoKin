@@ -6,7 +6,7 @@ import styles from './componentStyles/nav.css'
 const UserSelector = props => (
     <div className={styles.users}>
         {props.everyUser.map(eachUser=>(
-            <Link to={`/library/${eachUser.id}`}>{eachUser.firstName}</Link>
+            <Link to={`/library/${eachUser.username}`}>{eachUser.username}</Link>
         ))}
     </div>
 )

@@ -39,6 +39,7 @@ router.get('/library/:userPage', (req, res, next)=>{
 
         if(bucketContents.length>0){
 
+            console.log('show me keys ', bucketContents)
             const promisifiedMap = bucketContents.map(content=>{
 
                 const urlParams = {Bucket: process.env.BUCKETNAME, Key: 'thumbnail/' + content.Key, Expires: 3600};
@@ -66,6 +67,8 @@ router.get('/library/:userPage', (req, res, next)=>{
 
 router.get('/library/:userPage/:objectKey', (req,res,next)=>{
 
+    console.log('SELECT ', req.params.userPage + '/' + req.params.objectKey)
+
     s3Bucket.getSignedUrl('getObject', {Bucket: process.env.BUCKETNAME, Key: req.params.userPage + '/' + req.params.objectKey}, function(err, url){
         if(err) next(err)
         else{
@@ -77,13 +80,13 @@ router.get('/library/:userPage/:objectKey', (req,res,next)=>{
 
 router.post('/upload/:user', upload.array('image'), (req,res,next)=>{
 
-    const {firstName, lastName, id, numberOfImages} = req.user
+    const {numberOfImages, username} = req.user
 
     if(numberOfImages>=20) next(new Error('You have reached your limit of photos'))
 
     else {
-    const thumbData = { Key: 'thumbnail/' + firstName+lastName+id + '/' + req.files[0].originalname, Body: req.files[0].buffer };
-    const photoData = { Key: firstName+lastName+id + '/' + req.files[1].originalname, Body: req.files[1].buffer }
+    const thumbData = { Key: 'thumbnail/' + username + '/' + req.files[0].originalname, Body: req.files[0].buffer };
+    const photoData = { Key: username + '/' + req.files[1].originalname, Body: req.files[1].buffer }
     
     const wholeImage = new Promise((resolve, reject)=>{
         s3Bucket.putObject(photoData, function (err, data) {
@@ -118,16 +121,14 @@ router.put('/', (req,res,next)=>{
 
     console.log('We will tell S3 to delete ', req.body)
 
-    const authenticated = req.user.firstName+req.user.lastName+req.user.id
-
-    if(!req.body.key.startsWith(authenticated)){
+    if(!req.body.key.startsWith(req.user.username+'/')){
         const error = new Error('You do not have permission to delete this photo.')
         error.status=403
         next(error)
     }
     else{
 
-        s3Bucket.deleteObject({Bucket: process.env.BUCKETNAME, Key: req.body.key}, (err, data) => {
+        s3Bucket.deleteObject({Bucket: process.env.BUCKETNAME, Delete: {Objects: [{Key: 'thumbnail/'+req.body.key},{Key: req.body.key}]}}, (err, data) => {
             if(err) next(err)
             else{
                 req.user.numberOfImages--

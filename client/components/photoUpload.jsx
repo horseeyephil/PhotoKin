@@ -57,10 +57,11 @@ class Photo extends React.Component {
 
             const {user} = this.props
             const attachment = new FormData()
-            attachment.append('image', thumb, Date.now() + this.state.photoName)
-            attachment.append('image', fullSize, Date.now() + this.state.photoName)
+            const date = Date.now()+'_'
+            attachment.append('image', thumb, date + this.state.photoName)
+            attachment.append('image', fullSize, date + this.state.photoName)
 
-            axios.post(`/api/photography/upload/${user.firstName+user.lastName+user.id}`, attachment)
+            axios.post(`/api/photography/upload/${user.username}`, attachment)
             .then(res=>res.data)
             .then(res=>{
                 this.setState({photoPreview: null})
@@ -78,10 +79,10 @@ class Photo extends React.Component {
                     <input onChange = {this.handleAFile} name="myFile" type="file" />
                     {this.state.uploadQuality>0 && <button>Sub</button>}
                 </form>
-                {/* {this.state.photoPreview && <div>
+                {this.state.photoPreview && <div>
                     <img style={frame} src={URL.createObjectURL(this.state.photoPreview)} />
                     <CompressionForm setUploadQuality = {this.setUploadQuality} handleCompression={this.handleCompression}/>
-                </div>} */}
+                </div>}
               </Drawer>
             </div>
 

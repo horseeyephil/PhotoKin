@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
-import {Login, Signup} from './components'
 import {me} from './store'
 import {fetchUsersForAdmin} from './store/myUsers'
 import PhotoRoutes from './components/routablePhotoDisplay.jsx'
+import PhotoDisplay from './components/photoDisplay.jsx'
 
 /**
  * COMPONENT
@@ -20,7 +20,7 @@ class Routes extends Component {
     return (
 
       <Switch>
-        <Route path="/library/:id" render={props=><PhotoRoutes id={props.match.params.id} />} />
+        <Route path="/library/:username" component={PhotoDisplay} />
         {/* Routes placed here are available to all visitors */}
         {/* <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} /> */}

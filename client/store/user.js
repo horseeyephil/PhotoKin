@@ -28,9 +28,9 @@ export const me = () =>
         dispatch(getUser(res.data || defaultUser)))
       .catch(err => console.log(err))
 
-export const auth = (email, password, accessCode, firstName, lastName, method) =>
+export const auth = (email, password, accessCode, firstName, lastName, username, method) =>
   dispatch =>
-    axios.post(`/auth/${method}`, { email, password, accessCode, firstName, lastName })
+    axios.post(`/auth/${method}`, { email, password, accessCode, firstName, lastName, username })
       .then(res => {
         dispatch(getUser(res.data))
         history.push('/home')
