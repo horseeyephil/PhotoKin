@@ -1,5 +1,7 @@
 body {
   font-family: sans-serif;
+  margin: 200px;
+  background-color: black;
 }
 
 a {
@@ -18,4 +20,9 @@ nav a {
 form div {
   margin: 1em;
   display: inline-block;
+}
+
+#tail {
+  background-color: black;
+  height: 1000px;
 }

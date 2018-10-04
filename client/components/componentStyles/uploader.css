@@ -6,11 +6,10 @@
     position: absolute;
     right: 0;
     z-index: 2;
-    background-color: aliceblue;
+    background-color: white;
 }
 
 .uploadTool {
-    
     width: 300px;
     height: 40px;
     position: absolute;
@@ -18,23 +17,27 @@
     top: 0px;
 }
 
+.uploadForm{
+  position: absolute;
+  right: 0;
+  border: 2px solid orange;
+  border-radius: 40px;
+}
+
 .uploadFormOpen {
-    position: absolute;
-    right: 0;
-    border: 2px solid orange;
-    width: 300px;
+    width: 100px;
     height: 40px;
-    border-radius: 40px;
-    transition: width 1s;
+    transition: width 1s, height 1s;
 }
 
 .uploadFormClosed {
-    position: absolute;
-    right: 0;
     width: 40px;
     height: 40px;
-    border-radius: 40px;
-    border: 2px solid orange;
-    transition: width 1s;
+    transition: width 1s, height 1s;
     overflow: hidden;
+}
+
+.compressionForm{
+  width: 140px; 
+  border: 5px dotted goldenrod;
 }

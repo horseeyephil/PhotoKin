@@ -5,8 +5,12 @@ import { connect } from 'react-redux';
 const PhotoRoute = props => {
 
     const displayUser = props.allUsers.find(eachUser=> +eachUser.id === +props.id)
-    return <PhotoDisplay displayUser={displayUser} />
-}
+    return (
+    <div>
+      <PhotoDisplay displayUser={displayUser} />
+      <div id='tail'></div>
+    </div>
+)}
 
 const mapProps = state => ({allUsers: state.myUsers})
 

@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import CompressionForm from './photoCompressionForm.jsx'
 import canvasCompression from '../util/canvasCompression'
 import styles from './componentStyles/uploader.css'
+import Drawer from './drawer'
 
 const frame = {width: 600, height: 'auto', display: 'block'}
 
@@ -29,7 +30,7 @@ class Photo extends React.Component {
     }
 
     handleAFile(event){
-
+        this.props.createDisplay(URL.createObjectURL(event.target.files[0]), 'upload')
         this.setState({photoPreview: event.target.files[0], photoName: event.target.files[0].name})
     }
 
@@ -62,8 +63,6 @@ class Photo extends React.Component {
             axios.post(`/api/photography/upload/${user.firstName+user.lastName+user.id}`, attachment)
             .then(res=>res.data)
             .then(res=>{
-
-                console.log(res)
                 this.setState({photoPreview: null})
             })
         })
@@ -72,19 +71,18 @@ class Photo extends React.Component {
     render(){
 
         return (
-            <div id='uploadTool' className = {styles.uploadTool}>
-            <div className={styles.switchButton}
-            onClick = {()=>{this.setState({openTool: !this.state.openTool})}}>U</div>
-                {true && <div className={this.state.openTool ? styles.uploadFormClosed : styles.uploadFormOpen}>
+            <div id='uploadTool'>
+            <Drawer scale={40} className={styles.uploadForm} closedClass={styles.uploadFormClosed} openClass={styles.uploadFormOpen}
+            switch={styles.switchButton} root={styles.uploadTool} openWidth={200}>
                 <form onSubmit={this.handleCompression}>
                     <input onChange = {this.handleAFile} name="myFile" type="file" />
                     {this.state.uploadQuality>0 && <button>Sub</button>}
                 </form>
-                {this.state.photoPreview && <div>
+                {/* {this.state.photoPreview && <div>
                     <img style={frame} src={URL.createObjectURL(this.state.photoPreview)} />
                     <CompressionForm setUploadQuality = {this.setUploadQuality} handleCompression={this.handleCompression}/>
-                </div>}
-                </div>}
+                </div>} */}
+              </Drawer>
             </div>
 
         )
