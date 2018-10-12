@@ -23,6 +23,10 @@ form div {
 }
 
 #tail {
-  background-color: black;
-  height: 1000px;
+  background-color: pink;
+  height: 0px;
+}
+
+#application{
+  height: 1200px;
 }

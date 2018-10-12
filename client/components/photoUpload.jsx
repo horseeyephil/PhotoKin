@@ -4,67 +4,46 @@ import {connect} from 'react-redux'
 import CompressionForm from './photoCompressionForm.jsx'
 import canvasCompression from '../util/canvasCompression'
 import styles from './componentStyles/uploader.css'
-import Drawer from './drawer'
 
-const frame = {width: 600, height: 'auto', display: 'block'}
-
-
-class Photo extends React.Component {
-
-
+class UploadForm extends React.Component {
     constructor(props){
         super(props)
 
         this.state={
-            photoPreview: null,
+            image: null,
             photoName: '',
-            library: false,
             uploadQuality: 0,
-            openTool: true
         }
 
         this.handleAFile=this.handleAFile.bind(this)
-        this.handleUpload=this.handleUpload.bind(this)
-        this.handleCompression=this.handleCompression.bind(this)
+        this.compressAndUpload=this.compressAndUpload.bind(this)
         this.setUploadQuality=this.setUploadQuality.bind(this)
     }
 
     handleAFile(event){
-        this.props.createDisplay(URL.createObjectURL(event.target.files[0]), 'upload')
-        this.setState({photoPreview: event.target.files[0], photoName: event.target.files[0].name})
-    }
-
-    handleUpload(event){
-        const {user} = this.props
-        event.preventDefault()
-
-        const attachment = new FormData()
-        attachment.append('image', this.state.photoPreview)
-
-        axios.post(`/api/photography/upload/${user.firstName+user.lastName+user.id}`, attachment).then(console.log)
+        this.props.setUploadPreview(URL.createObjectURL(event.target.files[0]))
+        this.setState({image: event.target.files[0], photoName: event.target.files[0].name})
     }
 
     setUploadQuality(uploadQuality){
         this.setState({uploadQuality})
     }
 
-    handleCompression(event){
-
+    compressAndUpload(event){
         event.preventDefault()
+        const {image, uploadQuality, photoName} = this.state
 
-        const image = this.state.photoPreview
-        canvasCompression(image, this.state.uploadQuality).then(([thumb, fullSize])=>{
+        canvasCompression(image, uploadQuality).then(([thumb, fullSize])=>{
 
-            const {user} = this.props
+            const {user, uploadPreview} = this.props
             const attachment = new FormData()
             const date = Date.now()+'_'
-            attachment.append('image', thumb, date + this.state.photoName)
-            attachment.append('image', fullSize, date + this.state.photoName)
+            attachment.append('image', thumb, date + photoName)
+            attachment.append('image', fullSize, date + photoName)
 
             axios.post(`/api/photography/upload/${user.username}`, attachment)
-            .then(res=>res.data)
             .then(res=>{
-                this.setState({photoPreview: null})
+              this.props.setUploadMode(false, uploadPreview)
             })
         })
     }
@@ -72,24 +51,18 @@ class Photo extends React.Component {
     render(){
 
         return (
-            <div id='uploadTool'>
-            <Drawer scale={40} className={styles.uploadForm} closedClass={styles.uploadFormClosed} openClass={styles.uploadFormOpen}
-            switch={styles.switchButton} root={styles.uploadTool} openWidth={200}>
-                <form onSubmit={this.handleCompression}>
-                    <input onChange = {this.handleAFile} name="myFile" type="file" />
-                    {this.state.uploadQuality>0 && <button>Sub</button>}
+                <form className={styles.uploadTool} onSubmit={this.compressAndUpload}>
+                    <input className={styles.press} onChange = {this.handleAFile} name="myFile" type="file" />
+                    <div> 
+                      <button type='submit' disabled={this.state.uploadQuality<=0} className={styles.submitUpload}>Sub</button>
+                      <button className={styles.submitUpload} onClick={()=>this.props.setUploadMode(false)}>Cancel</button>
+                    </div>
+                    {this.state.image && <CompressionForm setUploadQuality = {this.setUploadQuality} handleCompression={this.handleCompression}/>}
                 </form>
-                {this.state.photoPreview && <div>
-                    <img style={frame} src={URL.createObjectURL(this.state.photoPreview)} />
-                    <CompressionForm setUploadQuality = {this.setUploadQuality} handleCompression={this.handleCompression}/>
-                </div>}
-              </Drawer>
-            </div>
-
         )
     }
 }
 
 const mapPropsUser = state => ({user: state.user})
 
-export default connect(mapPropsUser)(Photo)
+export default connect(mapPropsUser)(UploadForm)

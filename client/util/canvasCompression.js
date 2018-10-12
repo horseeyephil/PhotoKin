@@ -38,7 +38,6 @@ function generateThumbnail(image){
     const ctx = canvas.getContext("2d");
     ctx.drawImage(image, image.naturalWidth*.2, image.naturalHeight*.2, image.naturalWidth*.6, image.naturalHeight*.6, 0, 0, 150, 150);
 
-    document.getElementById('uploadTool').appendChild(canvas)
     return canvas
 }
 
@@ -46,9 +45,8 @@ function generateThumbnail(image){
 function performResize(image, quality){
 
         const canvas = document.createElement('canvas')
-        canvas.height= image.naturalHeight*quality
-        canvas.width= image.naturalWidth*quality
-        canvas.style.border='1px solid red'
+        canvas.height= image.naturalHeight
+        canvas.width= image.naturalWidth
 
         const ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);

@@ -1,52 +1,45 @@
 .nav{
+    position: relative;
     height: 50px;
     background-color: white;
     border: 1px solid red;
 }
 
 .switchButton {
-    border: 2px solid black;
-    /* width: 40px;
-    height: 40px;
-    border-radius: 40px; */
-    position: absolute;
-    right: 0;
+    height: 20px;
+    width: 65%;
     z-index: 4;
     background-color: rgb(161, 223, 161);
+    border: 1px solid rgb(161, 223, 161);;
+    border-radius: 0 0 4px 4px;
+    box-sizing: border-box;
+    opacity: .4;
+    margin-bottom: 15px;
 }
 
-.navTool {
-    
-    width: 300px;
-    height: 40px;
-    position: absolute;
-    right: 10px;
-    top: 0px;
+.switchButton:hover {
+  opacity: 1;
 }
 
 .panel{
   position: absolute;
-  right: 0;
+  top: 0;
+  right: 10px;
+  width: 200px;
   z-index: 3;
-  background-color: bisque;
-  /* opacity: .9; */
+  background-color: whitesmoke;
+  /* border: 1px solid orange;
+  border-radius: 0 0 7px 7px; */
+  box-sizing: border-box;
+  box-shadow: 3px 3px pink;
 }
 
 .panelOpen {
-    border: 1px solid orange;
-    /* width: 1300px;
-    height: 1400px;
-    border-radius: 8%; */
-    /* transition: width 1s, height 1s; */
+    border-radius: 8px;
 }
 
 .panelClosed {
-    /* width: 40px;
-    height: 40px;
-    border-radius: 40px; */
-    /* transition: width 1s, height 1s; */
-    border: 1px solid orange;
-    overflow: hidden;
+    height: 0px;
 }
 
 .nameHeader {

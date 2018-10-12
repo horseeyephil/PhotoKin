@@ -39,7 +39,6 @@ router.get('/library/:userPage', (req, res, next)=>{
 
         if(bucketContents.length>0){
 
-            console.log('show me keys ', bucketContents)
             const promisifiedMap = bucketContents.map(content=>{
 
                 const urlParams = {Bucket: process.env.BUCKETNAME, Key: 'thumbnail/' + content.Key, Expires: 3600};
@@ -128,7 +127,7 @@ router.put('/', (req,res,next)=>{
     }
     else{
 
-        s3Bucket.deleteObject({Bucket: process.env.BUCKETNAME, Delete: {Objects: [{Key: 'thumbnail/'+req.body.key},{Key: req.body.key}]}}, (err, data) => {
+        s3Bucket.deleteObjects({Bucket: process.env.BUCKETNAME, Delete: {Objects: [{Key: 'thumbnail/'+req.body.key},{Key: req.body.key}]}}, (err, data) => {
             if(err) next(err)
             else{
                 req.user.numberOfImages--

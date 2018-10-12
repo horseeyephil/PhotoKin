@@ -9,11 +9,11 @@ import styles from './componentStyles/nav.css'
 import {Login, Signup} from './'
 import Title from './userHeading'
 
-const Navbar = ({ handleClick, isLoggedIn, name }) => (
+const Navbar = ({ handleClick, isLoggedIn, location }) => {
+  return (
   <div className = {styles.nav}>
-    <Title userName={name}/>
-    <Drawer className={styles.panel} switch={styles.switchButton} closedClass={styles.panelClosed} openClass={styles.panelOpen}
-    scale={40} root={styles.navTool} openWidth='300px' openHeight='500px'>
+    <Title username={location.pathname.split('/')[2]}/>
+    <Drawer switch={styles.switchButton} root={styles.navTool} viewClass={styles.panel} openClass={styles.panelOpen} closedClass={styles.panelClosed}>
       {isLoggedIn ? (
         <div>
           <Link to="/home">Home</Link>
@@ -32,9 +32,9 @@ const Navbar = ({ handleClick, isLoggedIn, name }) => (
         </div>
       )}
     </Drawer>
-    <UserSelector/>
+    <UserSelector />
   </div>
-)
+)}
 
 /**
  * CONTAINER
@@ -42,7 +42,7 @@ const Navbar = ({ handleClick, isLoggedIn, name }) => (
 const mapState = state => {
   return {
     isLoggedIn: !!state.user.id,
-    name: state.user.firstName
+    name: state.user.firstName,
   }
 }
 

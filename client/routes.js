@@ -6,6 +6,7 @@ import {me} from './store'
 import {fetchUsersForAdmin} from './store/myUsers'
 import PhotoRoutes from './components/routablePhotoDisplay.jsx'
 import PhotoDisplay from './components/photoDisplay.jsx'
+import Navbar from './components/navbar.js'
 
 /**
  * COMPONENT
@@ -18,9 +19,11 @@ class Routes extends Component {
   render () {
     const {isLoggedIn} = this.props
     return (
-
+      <div id='application'>
+      <Navbar/>
       <Switch>
-        <Route path="/library/:username" component={PhotoDisplay} />
+        <Route path="/library/:username/:photoId" component={PhotoDisplay} />
+        <Route path="/library/:username/" component={PhotoDisplay} />
         {/* Routes placed here are available to all visitors */}
         {/* <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} /> */}
@@ -34,6 +37,7 @@ class Routes extends Component {
         {/* Displays our Login component as a fallback
         <Route component={Login} /> */}
       </Switch>
+      </div>
     )
   }
 }
